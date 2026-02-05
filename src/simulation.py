@@ -95,13 +95,17 @@ settings.export_to_xml()
 
 cell_filter = openmc.CellFilter(fuel)
 
-tally = openmc.Tally(1)
-tally.filters = [cell_filter]
+tallies = openmc.Tallies()
 
-tally.nuclides = ['U235']
-tally.scores = ['total', 'fission', 'absorption', '(n,gamma)']
+fission = openmc.Tally(name='FISSION_RATE')
+fission.nuclides = ['U235']
+fission.scores = ['fission']
 
-tallies = openmc.Tallies([tally])
+heating = openmc.Tally(name='HEATING')
+heating.nuclides = ['total']
+heating.scores = ['heating']
+
+tallies = openmc.Tallies([fission, heating])
 tallies.export_to_xml()
 
 ###############################################################

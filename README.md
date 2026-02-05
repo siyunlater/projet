@@ -13,7 +13,7 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 - FoM (Figure of Merit)
 - **Ordres de grandeur de la fluctuation**
 
-**Part B - Réduire incertitude statistiqe**
+**Part B - Réduire incertitude statistique**
 - Augmenter le nombre de particules
 - Independent runs
 - Résultats attendus : fluctuation depend de carré du N
@@ -40,8 +40,4 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 
 **Outil**
 - OpenMC
-<<<<<<< HEAD
 - 
-=======
-- 
->>>>>>> 46406c2 (fisrt commit)
