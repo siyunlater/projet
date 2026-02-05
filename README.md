@@ -40,4 +40,8 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 
 **Outil**
 - OpenMC
+<<<<<<< HEAD
 - 
+=======
+- 
+>>>>>>> 46406c2 (fisrt commit)
