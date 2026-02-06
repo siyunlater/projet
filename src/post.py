@@ -52,7 +52,7 @@ plt.tight_layout()
 plt.savefig('distribution.png', dpi=300)
 
 # Radial profile (1D)
-center_idx = 20 # 100/2
+center_idx = 50 # 100/2
 radial_fission = fission.mean[center_idx, :]
 
 plt.figure()
