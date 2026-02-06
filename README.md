@@ -1,5 +1,15 @@
 ## Analyse des fluctuations statistiques et physiques de la puissance et de l’énergie déposée dans des simulations Monte-Carlo
 
+### Basic questions
+
+Part A: What is the intrinsic MC noise level?
+
+Part B: How does statistical uncertainty scale?
+
+Part C: What is the magnitude of physical perturbations?
+
+Part D: When does a physical effect become detectable?
+
 ### 1. Introduction
 Bruit de méthode Monte-Carlo vs fluctuation physique
 
@@ -8,6 +18,7 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 **Part A — L'analyse de la fluctuation statistique de la méthode Monte-Carlo**
 
 - Calculs steady-state
+- Comparaison entre 'single run' et 'ensemble'
 - Observables : taux de fission, énergie déposée
 - Résultats : mean, variance, relative fluctuation(Relative Standard Deviation)
 - FoM (Figure of Merit)
@@ -40,4 +51,8 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 
 **Outil**
 - OpenMC
-- 
+
+**Limitations**
+- single pin-cell géométrie
+- Uniquement sur steady-state
+- pad de covariance de données nucléaire 
