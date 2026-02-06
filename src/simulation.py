@@ -1,5 +1,12 @@
 import openmc
 import numpy as np
+import argparse
+
+# Arguments parser
+parser = argparse.ArgumentParser()
+parser.add_argument("--seed", type=int, required=True)
+parser.add_argument("--outdir", type=str, required=True)
+args = parser.parse_args()
 
 ###############################################################
 # Material
@@ -84,8 +91,9 @@ settings = openmc.Settings()
 settings.source = source
 settings.batches = 100
 settings.inactive = 10
-settings.particles = 1000
-settings.seed = np.random.randint(1e9)
+settings.particles = 10000
+settings.seed = args.seed # random seed
+settings.output = {'path': args.outdir}
 
 settings.export_to_xml()
 
@@ -97,7 +105,7 @@ cell_filter = openmc.CellFilter(fuel)
 
 # Create mesh which will be used for tally
 mesh = openmc.RegularMesh()
-mesh.dimension = [100, 100]
+mesh.dimension = [50, 50]
 mesh.lower_left = [-0.39, -0.39]
 mesh.upper_right = [0.39, 0.39]
 
