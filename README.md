@@ -18,11 +18,13 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 **Part A — L'analyse de la fluctuation statistique de la méthode Monte-Carlo**
 
 - Calculs steady-state
-- Comparaison entre 'single run' et 'ensemble'
 - Observables : taux de fission, énergie déposée
 - Résultats : mean, variance, relative fluctuation(Relative Standard Deviation)
 - FoM (Figure of Merit)
 - **Ordres de grandeur de la fluctuation**
+  
+1. Comparaison entre 'single run' et 'ensemble'
+    -   pour que les valeurs totales (taux de fission total, énergie déposée totale)
 
 **Part B - Réduire incertitude statistique**
 - Augmenter le nombre de particules
