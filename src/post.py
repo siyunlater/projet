@@ -17,18 +17,27 @@ sp = openmc.StatePoint(SP_FILE)
 fission = sp.get_tally(scores=['fission'])
 heating = sp.get_tally(scores=['heating'])
 
-print(fission.sum, heating.sum)
+fission.std_dev.shape = (100, 100)
+fission.mean.shape = (100, 100)
+heating.std_dev.shape = (100, 100)
+heating.mean.shape = (100, 100)
 
-# 3. CSV
-#df = pd.DataFrame({
-#    'Fission_rate_mean': fission_mean,
-#    'Fission_rate_std': fission_std,
-#    'Heating_mean': heating_mean,
-#    'Heating_sigma': heating_std
-#})
-#
-#df.to_csv('fission_and_heating.csv', index=False)
-#
+#fig = plt.subplot(121)
+#fig.imshow(fission.mean)
+#fig2 = plt.subplot(122)
+#fig2.imshow(heating.mean
+#plt.savefig('figures.png', dpi=300)
+
+
+# Pandas data frame
+df_fission = fission.get_pandas_dataframe(nuclides=False)
+df_heating = heating.get_pandas_dataframe(nuclides=False)
+
+pd.options.display.float_format = '{:.2e}'.format
+
+df = pd.concat([df_fission, df_heating], ignore_index=True)
+df.to_csv('data_fission_and_heating.csv', index=False)
+
 ## =================================================================
 ## 3. Graph 
 ## =================================================================

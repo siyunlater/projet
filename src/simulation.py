@@ -99,7 +99,7 @@ cell_filter = openmc.CellFilter(fuel)
 
 # Create mesh which will be used for tally
 mesh = openmc.RegularMesh()
-mesh.dimension = [10, 10]
+mesh.dimension = [100, 100]
 mesh.lower_left = [-0.39, -0.39]
 mesh.upper_right = [0.39, 0.39]
 
