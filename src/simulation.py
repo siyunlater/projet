@@ -78,8 +78,10 @@ geometry.export_to_xml()
 # Source & Setting
 ###############################################################
 
-point = openmc.stats.Point((0, 0, 0))
-source = openmc.IndependentSource(space=point)
+# Create an initial uniform spatial source distribution over fissionable zones
+bounds = [-0.63, -0.63, -0.63, 0.63, 0.63, 0.63]
+uniform_dist = openmc.stats.Box(bounds[:3], bounds[3:], only_fissionable=True)
+source = openmc.IndependentSource(space=uniform_dist)
 
 settings = openmc.Settings()
 settings.source = source
@@ -95,17 +97,26 @@ settings.export_to_xml()
 
 cell_filter = openmc.CellFilter(fuel)
 
+# Create mesh which will be used for tally
+mesh = openmc.RegularMesh()
+mesh.dimension = [10, 10]
+mesh.lower_left = [-0.39, -0.39]
+mesh.upper_right = [0.39, 0.39]
+
+# Create mesh filter for tally
+mesh_filter = openmc.MeshFilter(mesh)
+
 tallies = openmc.Tallies()
 
-fission = openmc.Tally(name='FISSION_RATE')
-fission.nuclides = ['U235']
-fission.scores = ['fission']
+tally_fission = openmc.Tally(name='fission')
+tally_fission.filters = [mesh_filter]
+tally_fission.scores = ['fission']
 
-heating = openmc.Tally(name='HEATING')
-heating.nuclides = ['total']
-heating.scores = ['heating']
+tally_heating = openmc.Tally(name='heating')
+tally_heating.filters = [mesh_filter]
+tally_heating.scores = ['heating']
 
-tallies = openmc.Tallies([fission, heating])
+tallies = openmc.Tallies([tally_fission, tally_heating])
 tallies.export_to_xml()
 
 ###############################################################
