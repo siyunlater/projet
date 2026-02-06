@@ -41,4 +41,8 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 
 **Outil**
 - OpenMC
-- 
+
+**Limitations**
+- single pin-cell géométrie
+- Uniquement sur steady-state
+- pad de covariance de données nucléaire 
