@@ -1,5 +1,15 @@
 ## Analyse des fluctuations statistiques et physiques de la puissance et de l’énergie déposée dans des simulations Monte-Carlo
 
+### Basic questions
+
+Part A: What is the intrinsic MC noise level?
+
+Part B: How does statistical uncertainty scale?
+
+Part C: What is the magnitude of physical perturbations?
+
+Part D: When does a physical effect become detectable?
+
 ### 1. Introduction
 Bruit de méthode Monte-Carlo vs fluctuation physique
 
