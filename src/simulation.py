@@ -1,4 +1,5 @@
 import openmc
+import numpy as np
 
 ###############################################################
 # Material
@@ -88,6 +89,7 @@ settings.source = source
 settings.batches = 100
 settings.inactive = 10
 settings.particles = 1000
+settings.seed = np.random.randint(1e9)
 
 settings.export_to_xml()
 
