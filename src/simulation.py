@@ -24,10 +24,6 @@ water.add_s_alpha_beta('c_H_in_H2O')
 
 materials = openmc.Materials([uo2, zirconium, water])
 
-materials = openmc.Materials()
-materials.append(uo2)
-materials += [zirconium, water]
-
 materials.export_to_xml()
 
 ###############################################################
