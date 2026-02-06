@@ -22,11 +22,11 @@ fission.mean.shape = (100, 100)
 heating.std_dev.shape = (100, 100)
 heating.mean.shape = (100, 100)
 
-#fig = plt.subplot(121)
-#fig.imshow(fission.mean)
-#fig2 = plt.subplot(122)
-#fig2.imshow(heating.mean
-#plt.savefig('figures.png', dpi=300)
+fig = plt.subplot(121)
+fig.imshow(fission.mean)
+fig2 = plt.subplot(122)
+fig2.imshow(heating.mean)
+plt.savefig('figures.png', dpi=300)
 
 
 # Pandas data frame
