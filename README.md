@@ -19,12 +19,12 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 
 - Calculs steady-state
 - Observables : taux de fission, énergie déposée
-- Résultats : mean, variance, relative fluctuation(Relative Standard Deviation)
+- Résultats : mean, variance, relative fluctuation(Relative Standard Deviation), incertitude d'ensemble 
 - FoM (Figure of Merit)
 - **Ordres de grandeur de la fluctuation**
   
 1. Comparaison entre 'single run' et 'ensemble'
-    -   pour que les valeurs totales (taux de fission total, énergie déposée totale)
+    -   pour les valeurs totales (taux de fission total, énergie déposée totale)
 
 **Part B - Réduire incertitude statistique**
 - Augmenter le nombre de particules
