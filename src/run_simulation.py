@@ -1,12 +1,12 @@
 import subprocess
 import sys
-import numpy as np
 from pathlib import Path
 
 N_RUNS = 30
 BASE_SEED = 12345
 
-runs_dir = Path("runs")
+BASE_DIR = Path(__file__).resolve().parent
+runs_dir = BASE_DIR / "runs"
 runs_dir.mkdir(exist_ok=True)
 
 for i in range(N_RUNS):
@@ -16,7 +16,8 @@ for i in range(N_RUNS):
 
     seed = BASE_SEED + i * 1000
 
-    cmd = [
+    # 1. Run OpenMC
+    sim_cmd = [
         sys.executable,
         "simulation.py",
         "--seed", str(seed),
@@ -24,12 +25,21 @@ for i in range(N_RUNS):
     ]
 
     print(f"Running {run_id} with seed {seed}")
-    subprocess.run(cmd, check=True)
+    subprocess.run(sim_cmd, check=True)
 
-post_cmd = [
-    sys.executable,
-    "post_run.py",
-    "--statepoint", str(statepoint),
-    "--out", str(outdir / "results.csv")
-]
-subprocess.run(post_cmd, check=True)
+    # 2. Find statepoint file (robust)
+    statepoints = list(outdir.glob("statepoint.*.h5"))
+    if len(statepoints) == 0:
+        raise RuntimeError(f"No statepoint found in {outdir}")
+
+    statepoint = statepoints[0]
+
+    # 3. Post-process this run
+    post_cmd = [
+        sys.executable,
+        "post_run.py",
+        "--statepoint", str(statepoint),
+        "--out", str(outdir / "results.csv")
+    ]
+
+    subprocess.run(post_cmd, check=True)
