@@ -1,74 +1,64 @@
 import openmc
-import numpy as np
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+import argparse
+from pathlib import Path
 
-# =================================================================
-# 1. Load setting & data
-# =================================================================
-SP_FILE = 'statepoint.100.h5'
+parser = argparse.ArgumentParser()
+parser.add_argument("--statepoint", type=str, required=True)
+parser.add_argument("--out", type=str, required=True)
+args = parser.parse_args()
 
-sp = openmc.StatePoint(SP_FILE)
+sp = openmc.StatePoint(args.statepoint)
 
-# =================================================================
-# 2. Data processing
-# =================================================================
-#flux = tally.get_slice(scores=['flux'])
 fission = sp.get_tally(scores=['fission'])
 heating = sp.get_tally(scores=['heating'])
 
-# Data Reshape
-# mesh.dimension = [100, 100]
-f_mean = fission.mean.reshape((100, 100))
-f_std  = fission.std_dev.reshape((100, 100))
-h_mean = heating.mean.reshape((100, 100))
-h_std  = heating.std_dev.reshape((100, 100))
+f_total = fission.mean.sum()
+h_total = heating.mean.sum()
 
-# Pandas data frame
-df_fission = fission.get_pandas_dataframe(nuclides=False)
-df_heating = heating.get_pandas_dataframe(nuclides=False)
+df = pd.DataFrame({
+    "fission_total": [f_total],
+    "heating_total": [h_total]
+})
 
-pd.options.display.float_format = '{:.2e}'.format
+df.to_csv(args.out, index=False) # for each single run
 
-df = pd.concat([df_fission, df_heating], ignore_index=True)
-df.to_csv('data_fission_and_heating.csv', index=False)
 
-# =================================================================
-# 3. Graph 
-# =================================================================
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+runs_dir = Path("runs")
 
-# Fission Rate Distribution (2D)
-im1 = ax1.imshow(f_mean, cmap='viridis', origin='lower', interpolation='gaussian')
-ax1.set_title("Fission Rate Distribution")
-plt.colorbar(im1, ax=ax1, label='Fissions / source particle')
+fission_vals = []
+heating_vals = []
 
-# Heating (Energy Deposition) Distribution (2D)
-im2 = ax2.imshow(h_mean, cmap='magma', origin='lower', interpolation='gaussian')
-ax2.set_title("Energy Deposition (Heating)")
-plt.colorbar(im2, ax=ax2, label='eV / source particle')
+for run in runs_dir.glob("run_*"):
+    df = pd.read_csv(run / "results.csv")
+    fission_vals.append(df["fission_total"].iloc[0])
+    heating_vals.append(df["heating_total"].iloc[0])
 
-plt.tight_layout()
-plt.savefig('distribution.png', dpi=300)
+fission_vals = np.array(fission_vals)
+heating_vals = np.array(heating_vals)
 
-# Radial profile (1D)
-center_idx = 50 # 100/2
-radial_fission = fission.mean[center_idx, :]
+def stats(x):
+    mean = np.mean(x)
+    std = np.std(x, ddof=1)
+    sem = std / np.sqrt(len(x))
+    return mean, std, sem
 
-plt.figure()
-x = np.arange(100)
-y_fission = f_mean[center_idx, :].flatten()
-y_error = f_std[center_idx, :].flatten()
+f_mean, f_std, f_sem = stats(fission_vals)
+h_mean, h_std, h_sem = stats(heating_vals)
 
-plt.plot(x, y_fission, label='Fission Rate', color='blue')
-plt.fill_between(x, 
-                 y_fission - y_error, 
-                 y_fission + y_error, 
-                 alpha=0.3, color='blue', label='Stat. Uncertainty')
+print("FISSION:")
+print(f" mean = {f_mean:.4e}")
+print(f" std  = {f_std:.4e}")
+print(f" SEM  = {f_sem:.4e}")
 
-plt.xlabel('Mesh Index (X-direction)')
-plt.ylabel('Reaction Rate')
-plt.title('Radial Fission Rate Profile (at center Y)')
-plt.grid(True, linestyle='--', alpha=0.6)
-plt.legend()
-plt.savefig('radial_profile_1d.png', dpi=300)
+print("HEATING:")
+print(f" mean = {h_mean:.4e}")
+print(f" std  = {h_std:.4e}")
+print(f" SEM  = {h_sem:.4e}")
+
+for N in [5, 10, 20, 30]: # ensemble size validation
+    subset = fission_vals[:N]
+    mean, std, sem = stats(subset)
+    print(N, std)

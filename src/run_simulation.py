@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import numpy as np
 from pathlib import Path
 
@@ -16,7 +17,8 @@ for i in range(N_RUNS):
     seed = BASE_SEED + i * 1000
 
     cmd = [
-        "python", "simulation.py",
+        sys.executable,
+        "simulation.py",
         "--seed", str(seed),
         "--outdir", str(outdir)
     ]

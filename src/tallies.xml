@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<tallies>
+  <mesh id="1">
+    <dimension>50 50</dimension>
+    <lower_left>-0.39 -0.39</lower_left>
+    <upper_right>0.39 0.39</upper_right>
+  </mesh>
+  <filter id="2" type="mesh">
+    <bins>1</bins>
+  </filter>
+  <tally id="1" name="fission">
+    <filters>2</filters>
+    <scores>fission</scores>
+  </tally>
+  <tally id="2" name="heating">
+    <filters>2</filters>
+    <scores>heating</scores>
+  </tally>
+</tallies>
