@@ -25,3 +25,11 @@ for i in range(N_RUNS):
 
     print(f"Running {run_id} with seed {seed}")
     subprocess.run(cmd, check=True)
+
+post_cmd = [
+    sys.executable,
+    "post_run.py",
+    "--statepoint", str(statepoint),
+    "--out", str(outdir / "results.csv")
+]
+subprocess.run(post_cmd, check=True)
