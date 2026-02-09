@@ -30,6 +30,35 @@ def stats(x):
 f_mean, f_std, f_sem = stats(fission_vals)
 h_mean, h_std, h_sem = stats(heating_vals)
 
+df = pd.DataFrame({
+    "fission_mean": [f_mean],
+    "fission_std": [f_std],
+    "fission_sem": [f_sem],
+    "heating_mean": [h_mean],
+    "heating_std": [h_std],
+    "heating_sem": [h_sem]
+})
+
+valid_dict = {}
+for N in [5, 10, 20, 30]:
+    if len(fission_vals) >= N:
+        _, std, _ = stats(fission_vals[:N])
+        valid_dict[f"N = {N}"] = std
+    else:
+        valid_dict[f"N = {N}"] = np.nan
+
+df_valid = pd.DataFrame({
+    "ensemble_size": list(valid_dict.keys()),
+    "fission_std": list(valid_dict.values())
+})
+
+# Save main stats
+df.to_csv("ensemble_stats.csv", index=False)
+
+# Save validation separately or append
+df_valid.to_csv("ensemble_validation.csv", index=False)
+
+
 print("FISSION:")
 print(f" mean = {f_mean:.4e}")
 print(f" std  = {f_std:.4e}")

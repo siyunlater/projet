@@ -8,13 +8,15 @@ runs_dir = Path("runs")
 values = []
 times = []
 
+VAL = 'fission_total' # or heating 
+
 for run in runs_dir.glob("run_*"):
     df = pd.read_csv(run / "results.csv")
-    values.append(df["fission_total"].iloc[0])
+    values.append(df[VAL].iloc[0])
 
     # --- time from OpenMC ---
-    summary = openmc.Summary(run / "summary.h5")
-    sim_time = summary.run_metadata["simulation_time"]
+    sp = openmc.StatePoint(run / "statepoint.100.h5")
+    sim_time = sp.runtime["simulation"]
     times.append(sim_time)
 
 values = np.array(values)
@@ -30,6 +32,15 @@ T = np.mean(times)
 
 # --- Figure of Merit ---
 FoM = 1.0 / (rel_std**2 * T)
+
+df_time = pd.DataFrame({
+    "Mean value": [mean],
+    "Std ensemble": [std],
+    "Relative std": [rel_std],
+    "Mean time": [T],
+    "FoM": [FoM]
+})
+df_time.to_csv("Figure_of_Merit.csv", index=False)
 
 print("=== Ensemble FoM ===")
 print(f"Mean value        = {mean:.5e}")
