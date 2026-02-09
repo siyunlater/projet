@@ -1,0 +1,15 @@
+# Python 관련
+__pycache__/
+*.py[cod]
+
+# OpenMC 결과 파일 및 대용량 데이터
+summary.h5
+statepoint.*.h5
+geometry.xml
+materials.xml
+settings.xml
+plots.xml
+tallies.out
+
+# 시스템 파일
+.DS_Store
