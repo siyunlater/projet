@@ -40,7 +40,7 @@ df_time = pd.DataFrame({
     "Mean time": [T],
     "FoM": [FoM]
 })
-df_time.to_csv("Figure_of_Merit.csv", index=False)
+df_time.to_csv("results/Figure_of_Merit.csv", index=False)
 
 print("=== Ensemble FoM ===")
 print(f"Mean value        = {mean:.5e}")
