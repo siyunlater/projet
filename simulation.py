@@ -5,6 +5,8 @@ import argparse
 # Arguments parser
 parser = argparse.ArgumentParser()
 parser.add_argument("--seed", type=int, required=True)
+parser.add_argument("--batch", type=int, required=True)
+parser.add_argument("--particle", type=int, required=True)
 parser.add_argument("--outdir", type=str, required=True)
 args = parser.parse_args()
 
@@ -89,9 +91,9 @@ source = openmc.IndependentSource(space=uniform_dist)
 
 settings = openmc.Settings()
 settings.source = source
-settings.batches = 100
+settings.batches = args.batch # batch
 settings.inactive = 10
-settings.particles = 10000
+settings.particles = args.particle # particle
 settings.seed = args.seed # random seed
 settings.output = {'path': args.outdir}
 
