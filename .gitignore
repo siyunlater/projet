@@ -10,7 +10,7 @@ materials.xml
 settings.xml
 plots.xml
 tallies.out
-.csv
+*.csv
 
 # .md file except README.md
 *.md
