@@ -10,7 +10,7 @@
     </space>
   </source>
   <output>
-    <path>runs/run_030</path>
+    <path>/home/siyunlee/openmc/projet/src/runs/run_030</path>
   </output>
   <seed>41345</seed>
 </settings>
