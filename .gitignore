@@ -10,6 +10,11 @@ materials.xml
 settings.xml
 plots.xml
 tallies.out
+.csv
+
+# .md file except README.md
+*.md
+!README.md
 
 # 시스템 파일
 .DS_Store
