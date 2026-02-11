@@ -23,9 +23,6 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 - Plots : 
   - Taux de fission vs. Énergie déposée (mean, std)
   - single run vs. ensemble (histogram)
-  
-1. Comparaison entre 'single run' et 'ensemble'
-    -   pour les valeurs totales (taux de fission total, énergie déposée totale)
 
 **Part B - Réduire incertitude statistique**
 - Augmenter le nombre de particules
