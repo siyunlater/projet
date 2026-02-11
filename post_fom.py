@@ -1,50 +1,80 @@
 import openmc
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from pathlib import Path
 
-runs_dir = Path("runs")
+
+N_RUNS = 20  # M
+N_BATCH = 100
+N_PARTICLE = np.array([10000, 50000, 100000, 500000])
+
+BASE_DIR = Path(__file__).resolve().parent
 
 values = []
 times = []
 
+all_results = []
+
 VAL = 'fission_total' # or heating 
 
-for run in runs_dir.glob("run_*"):
-    df = pd.read_csv(run / "results.csv")
-    values.append(df[VAL].iloc[0])
+for n_particle in N_PARTICLE:
+    size = N_BATCH * n_particle
+    runs_dir = Path(f"N={size}" + "/runs")
 
-    # --- time from OpenMC ---
-    sp = openmc.StatePoint(run / "statepoint.100.h5")
-    sim_time = sp.runtime["simulation"]
-    times.append(sim_time)
+    for run in runs_dir.glob("run_*"):
+        df = pd.read_csv(run / "results.csv")
+        values.append(df[VAL].iloc[0])
 
-values = np.array(values)
-times = np.array(times)
+        # --- time from OpenMC ---
+        sp = openmc.StatePoint(run / "statepoint.100.h5")
+        sim_time = sp.runtime["simulation"]
+        times.append(sim_time)
 
-# --- ensemble statistics ---
-mean = np.mean(values)
-std = np.std(values, ddof=1)
-rel_std = std / mean
+    #values = np.array(values)
+    #times = np.array(times)
 
-# --- average simulation time ---
-T = np.mean(times)
+    # --- ensemble statistics ---
+    mean = np.mean(values)
+    std = np.std(values, ddof=1)
+    rel_std = std / mean
 
-# --- Figure of Merit ---
-FoM = 1.0 / (rel_std**2 * T)
+    # --- average simulation time ---
+    T = np.mean(times)
 
-df_time = pd.DataFrame({
-    "Mean value": [mean],
-    "Std ensemble": [std],
-    "Relative std": [rel_std],
-    "Mean time": [T],
-    "FoM": [FoM]
-})
-df_time.to_csv("results/Figure_of_Merit.csv", index=False)
+    # --- Figure of Merit ---
+    FoM = 1.0 / (rel_std**2 * T)
 
-print("=== Ensemble FoM ===")
-print(f"Mean value        = {mean:.5e}")
-print(f"Std (ensemble)    = {std:.5e}")
-print(f"Relative std      = {rel_std:.5e}")
-print(f"Mean time [s]     = {T:.2f}")
-print(f"FoM               = {FoM:.5e}")
+    results = {
+        "N" : size,
+        "batch": N_BATCH,
+        "particle": n_particle,
+        "Mean value": mean,
+        "Std ensemble": std,
+        "Relative std": rel_std,
+        "Mean time": T,
+        "FoM": FoM
+    }
+    all_results.append(results)
+
+df = pd.DataFrame(all_results)
+df.to_csv("results/Figure_of_Merit.csv", index=False)
+
+# --- Plot for ensemble ---
+# Extract data for plotting (remove NaN values)
+plot_df = df[df['FoM'].notna()]
+sizes = plot_df['N'].values
+figure_of_merit = plot_df['FoM'].values
+
+if len(sizes) > 1:    
+    plt.figure(figsize=(7, 5))
+    plt.loglog(sizes, figure_of_merit, 'o-', label="Ensemble fission σ")
+    plt.xlabel("Total number of histories (N)")
+    plt.ylabel("Figure of Merit")
+    plt.grid(True, which="both", ls="--", alpha=0.6)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("results/FoM_vs_N_ensemble.png", dpi=300)
+    plt.show()
+else:
+    print("Not enough data points for plotting")
