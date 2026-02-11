@@ -52,8 +52,6 @@ for n_batch in N_BATCH:
 
     # --- average simulation time ---
     T = np.mean(times)
-    # --- Figure of Merit ---
-    FoM = 1.0 / (rel_std**2 * T)
 
     f_mean, f_std, f_sem = stats(fission_vals)
     h_mean, h_std, h_sem = stats(heating_vals)
@@ -61,20 +59,25 @@ for n_batch in N_BATCH:
     fission_rel_sigma.append(f_sem / f_mean)
     heating_rel_sigma.append(h_sem / h_mean)
 
+    # --- Figure of Merit ---
+    f_FoM = 1.0 / (f_std**2 * T)
+    h_FoM = 1.0 / (h_std**2 * T)
+
     results = {
         "N" : size,
         "batch": n_batch,
         "particle": N_PARTICLE,
+        "mean time": T,
         "fission_mean": f_mean,
         "fission_std": f_std,
         "fission_sem": f_sem,
+        "fission FoM": f_FoM,
         "fission_rel_sigma": f_sem / f_mean,
         "heating_mean": h_mean,
         "heating_std": h_std,
         "heating_sem": h_sem,
         "heating_rel_sigma": h_sem / h_mean,
-        "mean time": T,
-        "FoM": FoM
+        "heating FoM": h_FoM
     }
     all_results.append(results)
 
