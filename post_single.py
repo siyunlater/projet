@@ -1,5 +1,5 @@
-# scaling_ensemble.py
-import pandas as pd
+# scaling_single.py
+import openmc
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -13,34 +13,22 @@ sizes = []
 fission_rel_sigma = []
 heating_rel_sigma = []
 
-def stats(x):
-    mean = np.mean(x)
-    std = np.std(x, ddof=1)
-    return mean, std
-
 for n_batch in N_BATCH:
 
     SIZE = n_batch * N_PARTICLE
-    runs_dir = BASE_DIR / f"N={SIZE}" / "runs"
+    run_dir = BASE_DIR / f"N={SIZE}" / "runs" / "run_001"
 
-    fission_vals = []
-    heating_vals = []
+    sp_file = list(run_dir.glob("statepoint.*.h5"))[0]
+    sp = openmc.StatePoint(sp_file)
 
-    for run in sorted(runs_dir.glob("run_*")):
-        csv_file = run / "results.csv"
-        if not csv_file.exists():
-            continue
+    fission = sp.get_tally(scores=["fission"])
+    heating = sp.get_tally(scores=["heating"])
 
-        df = pd.read_csv(csv_file)
-        fission_vals.append(df["fission_total"].iloc[0])
-        heating_vals.append(df["heating_total"].iloc[0])
+    f_mean = fission.mean.sum()
+    f_std = fission.std_dev.sum()
 
-    if len(fission_vals) < 2:
-        print(f"Skipping N={SIZE}, not enough runs")
-        continue
-
-    f_mean, f_std = stats(fission_vals)
-    h_mean, h_std = stats(heating_vals)
+    h_mean = heating.mean.sum()
+    h_std = heating.std_dev.sum()
 
     sizes.append(SIZE)
     fission_rel_sigma.append(f_std / f_mean)
@@ -52,11 +40,11 @@ fission_rel_sigma = np.array(fission_rel_sigma)
 coef = np.polyfit(np.log10(sizes), np.log10(fission_rel_sigma), 1)
 slope = coef[0]
 
-print(f"Ensemble slope ≈ {slope:.2f}")
+print(f"Single-run slope ≈ {slope:.2f}")
 
 plt.figure(figsize=(7,5))
-plt.loglog(sizes, fission_rel_sigma, 'o-', label="Ensemble fission σ")
-plt.loglog(sizes, heating_rel_sigma, 's--', label="Ensemble heating σ")
+plt.loglog(sizes, fission_rel_sigma, 'o-', label="Single-run fission σ")
+plt.loglog(sizes, heating_rel_sigma, 's--', label="Single-run heating σ")
 
 plt.xlabel("Total number of histories (N)")
 plt.ylabel("Relative statistical uncertainty σ")
@@ -73,5 +61,5 @@ plt.text(
 
 plt.legend()
 plt.tight_layout()
-plt.savefig("sigma_vs_N_ensemble.png", dpi=300)
+plt.savefig("sigma_vs_N_single.png", dpi=300)
 plt.show()
