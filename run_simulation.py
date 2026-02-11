@@ -6,7 +6,7 @@ import numpy as np
 N_RUNS = 20 # M
 BASE_SEED = 12345
 N_BATCH = 100
-N_PARTICLE = np.array([10000, 50000, 100000, 500000, 1000000, 5000000])
+N_PARTICLE = np.array([10000, 50000, 100000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
 for n_particle in N_PARTICLE: 
