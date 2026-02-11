@@ -60,8 +60,8 @@ for n_batch in N_BATCH:
     heating_rel_sigma.append(h_sem / h_mean)
 
     # --- Figure of Merit ---
-    f_FoM = 1.0 / (f_std**2 * T)
-    h_FoM = 1.0 / (h_std**2 * T)
+    f_FoM = 1.0 / (fission_rel_sigma**2 * T)
+    h_FoM = 1.0 / (heating_rel_sigma**2 * T)
 
     results = {
         "N" : size,
@@ -104,8 +104,8 @@ for n_batch in N_BATCH:
 
 # Save main stats
 combined_df = pd.DataFrame(all_results)
-combined_df.to_csv("results/ensemble_stats.csv", index=False)
-print(f"\nResults saved to results/ensemble_stats.csv")
+combined_df.to_csv("results/ensemble_stats_FoM.csv", index=False)
+print(f"\nResults saved to results/ensemble_stats_FoM.csv")
 
 # Ensemble size validation
 if len(fission_vals) >= 5:
@@ -160,8 +160,8 @@ else:
 
 # --- Plot for ensemble ---
 # Extract data for plotting (remove NaN values)
-fom_df = df[df['FoM'].notna()]
-figure_of_merit = fom_df['FoM'].values
+fom_df = combined_df[combined_df['f_FoM'].notna()]
+figure_of_merit = fom_df['f_FoM'].values
 
 if len(sizes) > 1:    
     plt.figure(figsize=(7, 5))
