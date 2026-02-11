@@ -47,8 +47,8 @@ for n_batch in N_BATCH:
 
     results = {
         "N" : size,
-        "batch": N_BATCH,
-        "particle": n_particle,
+        "batch": n_batch,
+        "particle": N_PARTICLE,
         "Mean value": mean,
         "Std ensemble": std,
         "Relative std": rel_std,
