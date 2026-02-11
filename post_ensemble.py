@@ -73,5 +73,5 @@ plt.text(
 
 plt.legend()
 plt.tight_layout()
-plt.savefig("sigma_vs_N_ensemble.png", dpi=300)
+plt.savefig("results/sigma_vs_N_ensemble.png", dpi=300)
 plt.show()
