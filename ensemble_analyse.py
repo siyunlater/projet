@@ -49,7 +49,7 @@ plt.xlabel("Fission total")
 plt.ylabel("Probability density")
 plt.legend()
 plt.tight_layout()
-plt.savefig("ensemble_histogram.png", dpi=300)
+plt.savefig("results/ensemble_histogram.png", dpi=300)
 plt.show()
 
 # --- ensemble size validation ---
