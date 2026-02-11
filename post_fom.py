@@ -6,8 +6,8 @@ from pathlib import Path
 
 
 N_RUNS = 20  # M
-N_BATCH = 100
-N_PARTICLE = np.array([10000, 50000, 100000, 500000])
+N_BATCH = np.array([100, 200, 500, 1000])
+N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -18,8 +18,8 @@ all_results = []
 
 VAL = 'fission_total' # or heating 
 
-for n_particle in N_PARTICLE:
-    size = N_BATCH * n_particle
+for n_batch in N_BATCH:
+    size = N_PARTICLE * n_batch
     runs_dir = Path(f"N={size}" + "/runs")
 
     for run in runs_dir.glob("run_*"):

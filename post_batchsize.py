@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 N_RUNS = 20
-N_BATCH = 100
-N_PARTICLE = np.array([10000, 50000, 100000, 500000])
+N_BATCH = np.array([100, 200, 500, 1000])
+N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -16,10 +16,9 @@ heating_vals = []
 fission_rel_sigma = []
 heating_rel_sigma = []
 
-for n_particle in N_PARTICLE:
-    SIZE = N_BATCH * n_particle
-    size_dir = BASE_DIR / f"N={SIZE}"
-    runs_dir = size_dir / "runs"
+for n_batch in N_BATCH:
+    SIZE = N_PARTICLE * n_batch
+    runs_dir = BASE_DIR / f"N={SIZE}" / "runs"
 
     # single run statepoint
 #    sp = openmc.StatePoint(runs_dir / "run_001/statepoint.100.h5")

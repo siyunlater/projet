@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 N_RUNS = 20  # M
-N_BATCH = 100
-N_PARTICLE = np.array([10000, 50000, 100000, 500000])
+N_BATCH = np.array([100, 200, 500, 1000])
+N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
 
 fission_rel_sigma = []
 heating_rel_sigma = []
@@ -21,10 +21,9 @@ def stats(x):
     sem = std / np.sqrt(len(x))
     return mean, std, sem
 
-for n_particle in N_PARTICLE:
-    size = N_BATCH * n_particle
-    size_dir = f"N={size}"
-    runs_dir = Path(size_dir + "/runs")
+for n_batch in N_BATCH:
+    size = N_PARTICLE * n_batch
+    runs_dir = Path(f"N={size}" + "/runs")
 
     fission_vals = []
     heating_vals = []
