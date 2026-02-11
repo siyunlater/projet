@@ -5,12 +5,12 @@ import numpy as np
 
 N_RUNS = 20 # M
 BASE_SEED = 12345
-N_BATCH = 100
-N_PARTICLE = np.array([10000, 50000, 100000, 500000])
+N_BATCH = np.array([100, 200, 500, 1000])
+N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
-for n_particle in N_PARTICLE: 
-    SIZE = N_BATCH * n_particle
+for n_batch in N_BATCH: 
+    SIZE = N_PARTICLE * n_batch
     size_dir = BASE_DIR / f"N={SIZE}"
     size_dir.mkdir(exist_ok=True)
     runs_dir = size_dir / "runs"
@@ -22,15 +22,15 @@ for n_particle in N_PARTICLE:
         outdir.mkdir(exist_ok=True)
 
         seed = BASE_SEED + i * 1000
-        batch = N_BATCH
-        particle = n_particle
+        batch = n_batch
+        particle = N_PARTICLE
 
         # 1. Run OpenMC
         sim_cmd = [
             sys.executable,
             "simulation.py",
-            "--seed", str(seed),
-            "--batch", str(batch),
+            "--seed", str(int(seed)),
+            "--batch", str(int(batch)),
             "--particle", str(int(particle)),
             "--outdir", str(outdir)
         ]
