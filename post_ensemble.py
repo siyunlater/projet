@@ -1,8 +1,11 @@
 # post_ensemble.py
+import openmc
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
 
 N_RUNS = 20  # M
 N_BATCH = np.array([100, 200, 500, 1000])
@@ -10,6 +13,11 @@ N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
 
 fission_rel_sigma = []
 heating_rel_sigma = []
+
+values = []
+times = []
+
+VAL = 'fission_total' # or heating 
 
 all_results = []
 
@@ -37,8 +45,15 @@ for n_batch in N_BATCH:
         fission_vals.append(df["fission_total"].iloc[0])
         heating_vals.append(df["heating_total"].iloc[0])
 
-    #fission_vals = np.array(fission_vals)
-    #heating_vals = np.array(heating_vals)
+        # --- time from OpenMC ---
+        sp = openmc.StatePoint(run / "statepoint.100.h5")
+        sim_time = sp.runtime["simulation"]
+        times.append(sim_time)
+
+    # --- average simulation time ---
+    T = np.mean(times)
+    # --- Figure of Merit ---
+    FoM = 1.0 / (rel_std**2 * T)
 
     f_mean, f_std, f_sem = stats(fission_vals)
     h_mean, h_std, h_sem = stats(heating_vals)
@@ -57,9 +72,10 @@ for n_batch in N_BATCH:
         "heating_mean": h_mean,
         "heating_std": h_std,
         "heating_sem": h_sem,
-        "heating_rel_sigma": h_sem / h_mean
+        "heating_rel_sigma": h_sem / h_mean,
+        "mean time": T,
+        "FoM": FoM
     }
-
     all_results.append(results)
 
     print(f"\n N = {size}, FISSION:")
@@ -135,6 +151,24 @@ if len(sizes) > 1:
     plt.legend()
     plt.tight_layout()
     plt.savefig("results/sigma_vs_N_ensemble.png", dpi=300)
+    plt.show()
+else:
+    print("Not enough data points for plotting")
+
+# --- Plot for ensemble ---
+# Extract data for plotting (remove NaN values)
+fom_df = df[df['FoM'].notna()]
+figure_of_merit = fom_df['FoM'].values
+
+if len(sizes) > 1:    
+    plt.figure(figsize=(7, 5))
+    plt.loglog(sizes, figure_of_merit, 'o-', label="Ensemble fission σ")
+    plt.xlabel("Total number of histories (N)")
+    plt.ylabel("Figure of Merit")
+    plt.grid(True, which="both", ls="--", alpha=0.6)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("results/FoM_vs_N_ensemble.png", dpi=300)
     plt.show()
 else:
     print("Not enough data points for plotting")
