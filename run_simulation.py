@@ -3,14 +3,14 @@ import sys
 from pathlib import Path
 import numpy as np
 
-N_RUNS = 20 # M
+N_RUNS = 1 # M
 BASE_SEED = 12345
-N_BATCH = np.array([100, 200, 500, 1000])
-N_PARTICLE = 10000 #np.array([10000, 50000, 100000, 500000])
+N_BATCH = 100
+N_PARTICLE = np.array([1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
-for n_batch in N_BATCH: 
-    SIZE = N_PARTICLE * n_batch
+for n_particle in N_PARTICLE: 
+    SIZE = N_BATCH * n_particle
     size_dir = BASE_DIR / f"N={SIZE}"
     size_dir.mkdir(exist_ok=True)
     runs_dir = size_dir / "runs"
@@ -22,8 +22,8 @@ for n_batch in N_BATCH:
         outdir.mkdir(exist_ok=True)
 
         seed = BASE_SEED + i * 1000
-        batch = n_batch
-        particle = N_PARTICLE
+        batch = N_BATCH
+        particle = n_particle
 
         # 1. Run OpenMC
         sim_cmd = [
