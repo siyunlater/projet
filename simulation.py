@@ -123,7 +123,13 @@ tally_heating = openmc.Tally(name='heating')
 tally_heating.filters = [mesh_filter]
 tally_heating.scores = ['heating']
 
-tallies = openmc.Tallies([tally_fission, tally_heating])
+tally_f_total = openmc.Tally(name='fission_total')
+tally_f_total.scores = ['fission']
+
+tally_h_total = openmc.Tally(name='heating_total')
+tally_h_total.scores = ['heating']
+
+tallies = openmc.Tallies([tally_fission, tally_heating, tally_f_total, tally_h_total])
 tallies.export_to_xml()
 
 ###############################################################
