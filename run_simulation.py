@@ -3,12 +3,13 @@ import sys
 from pathlib import Path
 import numpy as np
 
-N_RUNS = 1 # M
+N_RUNS = 20 # M
 BASE_SEED = 12345
 N_BATCH = 100
 N_PARTICLE = np.array([1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
+
 for n_particle in N_PARTICLE: 
     SIZE = N_BATCH * n_particle
     size_dir = BASE_DIR / f"N={SIZE}"
