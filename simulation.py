@@ -92,7 +92,6 @@ source = openmc.IndependentSource(space=uniform_dist)
 settings = openmc.Settings()
 settings.source = source
 settings.batches = args.batch # batch
-settings.inactive = 10
 settings.particles = args.particle # particle
 settings.seed = args.seed # random seed
 settings.output = {'path': args.outdir}
