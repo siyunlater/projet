@@ -13,6 +13,9 @@ sizes = []
 fission_rel_sigma = []
 heating_rel_sigma = []
 
+fission_vals = []
+times = []
+
 for n_particle in N_PARTICLE:
     SIZE = N_BATCH * n_particle
     run_dir = BASE_DIR / f"N={SIZE}" / "runs" / "run_001"
@@ -30,12 +33,24 @@ for n_particle in N_PARTICLE:
     h_std = heating.std_dev.sum()
 
     sizes.append(SIZE)
+
     fission_rel_sigma.append(f_std / f_mean)
     heating_rel_sigma.append(h_std / h_mean)
+
+    times.append(sp.runtime["simulation"])
+
+FoMs = []
+
+for i in range(len(times)):
+    FoM = 1.0 / (fission_rel_sigma[i]**2 * times[i])
+    FoMs.append(FoM)
 
 sizes = np.array(sizes)
 fission_rel_sigma = np.array(fission_rel_sigma)
 
+FoMs = np.array(FoMs)
+
+# For sigma vs. N
 coef = np.polyfit(np.log10(sizes), np.log10(fission_rel_sigma), 1)
 slope = coef[0]
 
@@ -61,4 +76,17 @@ plt.text(
 plt.legend()
 plt.tight_layout()
 plt.savefig("results/sigma_vs_N_single.png", dpi=300)
+plt.show()
+
+# For FoM vs. N
+plt.figure(figsize=(7,5))
+plt.plot(sizes, FoMs, 'o-', label="single run Fission FoM")
+
+plt.xlabel("Total number of histories (N)")
+plt.ylabel("FoM")
+plt.grid(True, which="both", ls="--", alpha=0.6)
+
+plt.legend()
+plt.tight_layout()
+plt.savefig("results/FoM_vs_N_single.png", dpi=300)
 plt.show()
