@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-N_BATCH = np.array([100, 200, 500, 1000])
-N_PARTICLE = 10000
+N_BATCH = 100
+N_PARTICLE = np.array([1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000])
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -13,9 +13,8 @@ sizes = []
 fission_rel_sigma = []
 heating_rel_sigma = []
 
-for n_batch in N_BATCH:
-
-    SIZE = n_batch * N_PARTICLE
+for n_particle in N_PARTICLE:
+    SIZE = N_BATCH * n_particle
     run_dir = BASE_DIR / f"N={SIZE}" / "runs" / "run_001"
 
     sp_file = list(run_dir.glob("statepoint.*.h5"))[0]
