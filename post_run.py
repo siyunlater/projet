@@ -14,12 +14,17 @@ sp = openmc.StatePoint(args.statepoint)
 fission = sp.get_tally(scores=['fission'])
 heating = sp.get_tally(scores=['heating'])
 
-f_total = fission.mean.sum()
-h_total = heating.mean.sum()
+f_mean = fission.mean.sum()
+h_mean = heating.mean.sum()
+
+f_std = fission.std_dev.sum()
+h_std = heating.std_dev.sum()
 
 df = pd.DataFrame({
-    "fission_total": [f_total],
-    "heating_total": [h_total]
+    "fission_total_mean": [f_mean],
+    "fission_total_std": [f_std],
+    "heating_total_mean": [h_mean],
+    "heating_total_std": [h_std]
 })
 
 Path(args.out).parent.mkdir(parents=True, exist_ok=True)
