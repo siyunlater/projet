@@ -28,6 +28,7 @@ Bruit de méthode Monte-Carlo vs fluctuation physique
 - Augmenter le nombre de particules
 - Independent runs
 - Résultats attendus : fluctuation depend de carré du N
+- FoM pour les différents nombres de particules
 
 **Part C - Introduire petite pertubation physique**
 - small changes in density and temperature
