@@ -32,7 +32,7 @@ for i in range(N_RUNS):
         "--outdir", str(outdir)
     ]
 
-    print(f"Running {run_id} with seed {seed}, N = {SIZE}")
+    print(f"Running {run_id} with seed {seed}")
     subprocess.run(sim_cmd, check=True)
 
     # 2. Find statepoint file (robust)
