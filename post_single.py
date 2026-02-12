@@ -81,6 +81,7 @@ plt.show()
 # For FoM vs. N
 plt.figure(figsize=(7,5))
 plt.plot(sizes, FoMs, 'o-', label="single run Fission FoM")
+plt.xscale('log')
 
 plt.xlabel("Total number of histories (N)")
 plt.ylabel("FoM")
