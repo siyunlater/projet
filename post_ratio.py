@@ -7,6 +7,7 @@ runs_dir = BASE_DIR / "runs"
 
 values = []
 mc_sigmas = []
+times = []
 
 for run in sorted(runs_dir.glob("run_*")):
 
@@ -22,9 +23,17 @@ for run in sorted(runs_dir.glob("run_*")):
     
     values.append(mean)
     mc_sigmas.append(std)
+    times.append(sp.runtime["simulation"])
 
 values = np.array(values)
 mc_sigmas = np.array(mc_sigmas)
+
+T = np.mean(times)
+val_mean = np.mean(values)
+val_std = np.std(values, ddof=1)
+rel_sigma = val_std / val_mean
+
+FoM = 1.0 / (rel_sigma**2 * T)
 
 M = len(values)
 
@@ -37,6 +46,7 @@ print(f"Number of runs: {M}")
 print(f"σ_ensemble = {sigma_ensemble:.4e}")
 print(f"mean σ_MC  = {sigma_mc_mean:.4e}")
 print(f"R = {R:.4f}")
+print(f"FoM = {FoM:.4f}")
 
 print(mean, std)
 print(std/mean)
