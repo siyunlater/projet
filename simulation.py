@@ -92,6 +92,7 @@ source = openmc.IndependentSource(space=uniform_dist)
 settings = openmc.Settings()
 settings.source = source
 settings.batches = args.batch # batch
+settings.inactive = 10
 settings.particles = args.particle # particle
 settings.seed = args.seed # random seed
 settings.output = {'path': args.outdir}
@@ -116,20 +117,14 @@ mesh_filter = openmc.MeshFilter(mesh)
 tallies = openmc.Tallies()
 
 tally_fission = openmc.Tally(name='fission')
-tally_fission.filters = [mesh_filter]
+#tally_fission.filters = [mesh_filter]
 tally_fission.scores = ['fission']
 
 tally_heating = openmc.Tally(name='heating')
-tally_heating.filters = [mesh_filter]
+#tally_heating.filters = [mesh_filter]
 tally_heating.scores = ['heating']
 
-tally_f_total = openmc.Tally(name='fission_total')
-tally_f_total.scores = ['fission']
-
-tally_h_total = openmc.Tally(name='heating_total')
-tally_h_total.scores = ['heating']
-
-tallies = openmc.Tallies([tally_fission, tally_heating, tally_f_total, tally_h_total])
+tallies = openmc.Tallies([tally_fission, tally_heating])
 tallies.export_to_xml()
 
 ###############################################################
