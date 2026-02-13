@@ -10,18 +10,20 @@ N_PARTICLE = 50000
 
 BASE_DIR = Path(__file__).resolve().parent
 
-temperature = 303.6 # K
+ref_temp = 293.6
+temperature = np.array([293.6, 303.6]) # K
 
 runs_dir = BASE_DIR / "runs"
 runs_dir.mkdir(exist_ok=True)
 
-for i in range(N_RUNS):
-    run_id = f"run_{i+1:03d}"
+for i in range(len(temperature)):
+    run_id = f"temp_{i+1:03d}"
     outdir = runs_dir / run_id
     outdir.mkdir(exist_ok=True)
-    seed = BASE_SEED + i * 1000
+    seed = BASE_SEED # + i * 1000
     batch = N_BATCH
     particle = N_PARTICLE
+    tem = temperature[i]
     # 1. Run OpenMC
     sim_cmd = [
         sys.executable,
@@ -30,9 +32,9 @@ for i in range(N_RUNS):
         "--batch", str(int(batch)),
         "--particle", str(int(particle)),
         "--outdir", str(outdir),
-        "--temperature", str(float(temperature))
+        "--temperature", str(float(tem))
     ]
-    print(f"Running {run_id} with seed {seed}")
+    print(f"Running {run_id} with temperature {tem}")
     subprocess.run(sim_cmd, check=True)
     # 2. Find statepoint file (robust)
     statepoints = list(outdir.glob("statepoint.*.h5"))
