@@ -8,7 +8,6 @@ parser.add_argument("--seed", type=int, required=True)
 parser.add_argument("--batch", type=int, required=True)
 parser.add_argument("--particle", type=int, required=True)
 parser.add_argument("--outdir", type=str, required=True)
-#parser.add_argument("--temperature", type=float, required=True)
 parser.add_argument("--density", type=float, required=True)
 args = parser.parse_args()
 
@@ -21,18 +20,15 @@ uo2.add_nuclide('U235', 0.03) #atomic density
 uo2.add_nuclide('U238', 0.97)
 uo2.add_nuclide('O16', 2.0)
 uo2.set_density('g/cm3', 10.0*args.density)
-#uo2.temperature = args.temperature
 
 zirconium = openmc.Material(name="zirconium")
 zirconium.add_element('Zr', 1.0)
 zirconium.set_density('g/cm3', 6.6*args.density)
-#zirconium.temperature = args.temperature
 
 water = openmc.Material(name="h2o")
 water.add_nuclide('H1', 2.0)
 water.add_nuclide('O16', 1.0)
 water.set_density('g/cm3', 1.0*args.density)
-#water.temperature = args.temperature
 
 water.add_s_alpha_beta('c_H_in_H2O')
 
