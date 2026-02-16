@@ -11,7 +11,7 @@ N_PARTICLE = 50000
 BASE_DIR = Path(__file__).resolve().parent
 
 ref_temp = 293.6
-temperature = np.array([293.6, 303.6]) # K
+temperature = np.array([293.6, 298.6, 303.6, 308.6]) # K
 
 runs_dir = BASE_DIR / "runs"
 runs_dir.mkdir(exist_ok=True)
