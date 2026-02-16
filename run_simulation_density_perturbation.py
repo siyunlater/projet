@@ -19,8 +19,6 @@ for d in range(len(density)):
     dens_dir = runs_dir / dens_id
     dens_dir.mkdir(exist_ok=True)
 
-    batch = N_BATCH
-    particle = N_PARTICLE
     dens = density[d]
 
     for i in range(N_RUNS):
@@ -29,6 +27,8 @@ for d in range(len(density)):
         outdir.mkdir(exist_ok=True)
 
         seed = BASE_SEED + i * 1000
+        batch = N_BATCH
+        particle = N_PARTICLE
 
         # 1. Run OpenMC
         sim_cmd = [
@@ -41,12 +41,17 @@ for d in range(len(density)):
             "--density", str(float(dens))
         ]
         print(f"Running {run_id} with density {dens}")
+        print(outdir)
         subprocess.run(sim_cmd, check=True)
+
         # 2. Find statepoint file (robust)
         statepoints = list(outdir.glob("statepoint.*.h5"))
+
         if len(statepoints) == 0:
             raise RuntimeError(f"No statepoint found in {outdir}")
+        
         statepoint = statepoints[0]
+
         # 3. Post-process this run
         post_cmd = [
             sys.executable,
