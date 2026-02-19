@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 import numpy as np
 
-N_RUNS = 20 # M
+N_RUNS = 1 # M
 BASE_SEED = 12345
 N_BATCH = 100
 N_PARTICLE = np.array([1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000])
@@ -27,9 +27,10 @@ for n_particle in N_PARTICLE:
         particle = n_particle
 
         # 1. Run OpenMC
+        sim_script = BASE_DIR / "simulation.py"
         sim_cmd = [
             sys.executable,
-            "simulation.py",
+            str(sim_script),
             "--seed", str(int(seed)),
             "--batch", str(int(batch)),
             "--particle", str(int(particle)),
@@ -47,9 +48,11 @@ for n_particle in N_PARTICLE:
         statepoint = statepoints[0]
 
         # 3. Post-process this run
+        post_script = BASE_DIR / "post_run.py"
+
         post_cmd = [
             sys.executable,
-            "post_run.py",
+            str(post_script),
             "--statepoint", str(statepoint),
             "--out", str(outdir / "results.csv")
         ]

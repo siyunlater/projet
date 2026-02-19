@@ -20,7 +20,7 @@ for n_particle in N_PARTICLE:
     SIZE = N_BATCH * n_particle
     run_dir = BASE_DIR / f"N={SIZE}" / "runs" / "run_001"
 
-    sp_file = list(run_dir.glob("statepoint.*.h5"))[0]
+    sp_file = list(run_dir.glob("statepoint.100.h5"))[0]
     sp = openmc.StatePoint(sp_file)
 
     fission = sp.get_tally(scores=["fission"])
@@ -39,22 +39,35 @@ for n_particle in N_PARTICLE:
 
     times.append(sp.runtime["simulation"])
 
-FoMs = []
+print("Fission rate mean:", f_mean)
+print("Fission rate std:", f_std)
+print("Heating mean:", h_mean)
+print("Heating std:", h_std)
+
+f_FoMs = []
+h_FoMs = []
 
 for i in range(len(times)):
-    FoM = 1.0 / (fission_rel_sigma[i]**2 * times[i])
-    FoMs.append(FoM)
+    f_FoM = 1.0 / (fission_rel_sigma[i]**2 * times[i])
+    h_FoM = 1.0 / (heating_rel_sigma[i]**2 * times[i])
+    f_FoMs.append(f_FoM)
+    h_FoMs.append(h_FoM)
 
 sizes = np.array(sizes)
 fission_rel_sigma = np.array(fission_rel_sigma)
+heating_rel_sigma = np.array(heating_rel_sigma)
 
-FoMs = np.array(FoMs)
+f_FoMs = np.array(f_FoMs)
+h_FoMs = np.array(h_FoMs)
 
 # For sigma vs. N
-coef = np.polyfit(np.log10(sizes), np.log10(fission_rel_sigma), 1)
-slope = coef[0]
+f_coef = np.polyfit(np.log10(sizes), np.log10(fission_rel_sigma), 1)
+f_slope = f_coef[0]
+h_coef = np.polyfit(np.log10(sizes), np.log10(heating_rel_sigma), 1)
+h_slope = h_coef[0]
 
-print(f"Single-run slope ≈ {slope:.2f}")
+print(f"Single-run slope (fission rate) ≈ {f_slope:.2f}")
+print(f"Single-run slope (heating) ≈ {h_slope:.2f}")
 
 plt.figure(figsize=(7,5))
 plt.loglog(sizes, fission_rel_sigma, 'o-', label="Single-run fission σ")
@@ -66,7 +79,7 @@ plt.grid(True, which="both", ls="--", alpha=0.6)
 
 plt.text(
     0.05, 0.95,
-    rf"Slope = {slope:.2f}",
+    rf"Slope (fission rate) = {f_slope:.2f}; Slope (heating) = {h_slope:.2f}",
     transform=plt.gca().transAxes,
     fontsize=11,
     verticalalignment="top",
@@ -80,7 +93,8 @@ plt.show()
 
 # For FoM vs. N
 plt.figure(figsize=(7,5))
-plt.plot(sizes, FoMs, 'o-', label="single run Fission FoM")
+plt.plot(sizes, f_FoMs, 'o-', label="single run Fission FoM (fission rate)")
+plt.plot(sizes, h_FoMs, 'o-', label="single run Fission FoM (heating)")
 plt.xscale('log')
 
 plt.xlabel("Total number of histories (N)")

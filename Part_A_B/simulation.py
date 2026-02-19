@@ -103,16 +103,16 @@ settings.export_to_xml()
 # Tally
 ###############################################################
 
-cell_filter = openmc.CellFilter(fuel)
+#cell_filter = openmc.CellFilter(fuel)
 
 # Create mesh which will be used for tally
-mesh = openmc.RegularMesh()
-mesh.dimension = [50, 50]
-mesh.lower_left = [-0.39, -0.39]
-mesh.upper_right = [0.39, 0.39]
+#mesh = openmc.RegularMesh()
+#mesh.dimension = [50, 50]
+#mesh.lower_left = [-0.39, -0.39]
+#mesh.upper_right = [0.39, 0.39]
 
 # Create mesh filter for tally
-mesh_filter = openmc.MeshFilter(mesh)
+#mesh_filter = openmc.MeshFilter(mesh)
 
 tallies = openmc.Tallies()
 
