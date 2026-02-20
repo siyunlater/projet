@@ -23,9 +23,10 @@ for i in range(N_RUNS):
     particle = N_PARTICLE
 
     # 1. Run OpenMC
+    sim_script = BASE_DIR / "simulation.py"
     sim_cmd = [
         sys.executable,
-        "simulation.py",
+        str(sim_script),
         "--seed", str(int(seed)),
         "--batch", str(int(batch)),
         "--particle", str(int(particle)),
@@ -43,9 +44,11 @@ for i in range(N_RUNS):
     statepoint = statepoints[0]
 
     # 3. Post-process this run
+    post_script = BASE_DIR / "post_run.py"
+
     post_cmd = [
         sys.executable,
-        "post_run.py",
+        str(post_script),
         "--statepoint", str(statepoint),
         "--out", str(outdir / "results.csv")
     ]

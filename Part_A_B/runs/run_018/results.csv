@@ -1,2 +1,2 @@
-fission_total,heating_total
-0.5718981033185297,100723694.07273895
+fission_total_mean,fission_total_std,heating_total_mean,heating_total_std
+0.572133851278031,0.000346566865848807,102737354.15859243,61086.974210360226
